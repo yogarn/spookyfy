@@ -1,6 +1,7 @@
-public class Pelanggan {
+public abstract class Pelanggan implements Mendengarkan {
     private int kodePelanggan;
     private String nama;
+
     // currently using String, use Enum if possible
     private String statusKeanggotaan;
     private Lagu[] playlist;
