@@ -1,46 +1,37 @@
 public abstract class Pelanggan implements Mendengarkan {
-    private int kodePelanggan;
+    private int kode;
     private String nama;
 
-    // currently using String, use Enum if possible
-    private String statusKeanggotaan;
-    private Lagu[] playlist;
+    private JenisPelanggan statusKeanggotaan;
+    private Playlist playlist;
 
-    public Pelanggan(int kodePelanggan, String nama, String statusKeanggotaan) {
-        this.kodePelanggan = kodePelanggan;
+    public Pelanggan(int kode, String nama, JenisPelanggan statusKeanggotaan) {
+        this.kode = kode;
         this.nama = nama;
         this.statusKeanggotaan = statusKeanggotaan;
     }
 
-    public int getKodePelanggan() {
-        return kodePelanggan;
-    }
-
-    public void setKodePelanggan(int kodePelanggan) {
-        this.kodePelanggan = kodePelanggan;
+    public int getKode() {
+        return kode;
     }
 
     public String getNama() {
         return nama;
     }
 
-    public void setNama(String nama) {
-        this.nama = nama;
-    }
-
-    public String getStatusKeanggotaan() {
+    public JenisPelanggan getStatusKeanggotaan() {
         return statusKeanggotaan;
     }
 
-    public void setStatusKeanggotaan(String statusKeanggotaan) {
+    public void setStatusKeanggotaan(JenisPelanggan statusKeanggotaan) {
         this.statusKeanggotaan = statusKeanggotaan;
     }
 
-    public Lagu[] getPlaylist() {
+    public Playlist getPlaylist() {
         return playlist;
     }
 
-    public void setPlaylist(Lagu[] playlist) {
+    public void setPlaylist(Playlist playlist) {
         this.playlist = playlist;
     }
 }

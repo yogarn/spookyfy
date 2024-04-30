@@ -1,3 +1,5 @@
+import java.util.List;
+
 public interface Mendengarkan {
-    public void ambilListLagu();
+    public List<Lagu> ambilListLagu();
 }
