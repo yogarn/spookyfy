@@ -4,8 +4,8 @@ import java.util.List;
 
 public class PelangganPremium extends Pelanggan {
 
-    public PelangganPremium(int kode, String nama, JenisPelanggan statusKeanggotaan) {
-        super(kode, nama, statusKeanggotaan);
+    public PelangganPremium(int kode, String nama) {
+        super(kode, nama, StatusKeanggotaan.PREMIUM);
     }
 
     @Override

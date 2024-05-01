@@ -3,17 +3,19 @@ import java.util.Scanner;
 
 public class Spookyfy {
     public static final Playlist DEFAULT_PLAYLIST = new Playlist(new Lagu[]{
-            new Lagu("Bohemian Rhapsody", "Rock", 1975, "Queen", "Freddie Mercury"),
-            new Lagu("Hotel California", "Rock", 1976, "Eagles", "Don Felder"),
-            new Lagu("Stairway to Heaven", "Rock", 1971, "Led Zeppelin", "Jimmy Page"),
-            new Lagu("Sweet Child O' Mine", "Rock", 1987, "Guns N' Roses", "Axl Rose"),
-            new Lagu("Smells Like Teen Spirit", "Grunge", 1991, "Nirvana", "Kurt Cobain"),
-            new Lagu("Blinding Lights", "Synthwave", 2020, "The Weeknd", "The Weeknd"),
-            new Lagu("Dance Monkey", "Pop", 2019, "Tones and I", "Toni Watson"),
-            new Lagu("Savage Love", "Pop", 2020, "Jawsh 685 & Jason Derulo", "Jason Derulo"),
-            new Lagu("Watermelon Sugar", "Pop", 2020, "Harry Styles", "Harry Styles"),
-            new Lagu("Levitating", "Pop", 2020, "Dua Lipa", "Dua Lipa"),
+            new Lagu("Rolling in the Deep", "Pop", 2010, "Adele", "Adele Adkins"),
+            new Lagu("Uptown Funk", "Funk", 2014, "Mark Ronson ft. Bruno Mars", "Bruno Mars"),
+            new Lagu("Shape of You", "Pop", 2017, "Ed Sheeran", "Ed Sheeran"),
+            new Lagu("Believer", "Rock", 2017, "Imagine Dragons", "Dan Reynolds"),
+            new Lagu("Old Town Road", "Country Rap", 2019, "Lil Nas X", "Lil Nas X"),
+            new Lagu("As It Was", "Pop", 2022, "Harry Styles", "Harry Styles"),
+            new Lagu("Stay", "Pop", 2021, "The Kid LAROI & Justin Bieber", "Justin Bieber"),
+            new Lagu("Easy On Me", "Pop", 2021, "Adele", "Adele Adkins"),
+            new Lagu("About Damn Time", "Funk Pop", 2022, "Lizzo", "Melissa Jefferson"),
+            new Lagu("Shivers", "Pop", 2021, "Ed Sheeran", "Ed Sheeran"),
     });
+
+    public static String HELP = "Perintah yang tersedia: list_lagu, play, exit, help, ubah_status";
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
@@ -22,43 +24,61 @@ public class Spookyfy {
         input.nextLine();
         System.out.print("Nama: ");
         String nama = input.nextLine();
-        
-        Pelanggan pelanggan = new PelangganFree(kode, nama, JenisPelanggan.FREE);
-
-        System.out.println();
-        System.out.printf("+%s+%s+\n", "-".repeat(20), "-".repeat(88));
-        System.out.printf("| %-18s | %-86s |\n", "Informasi Pengguna", "Keterangan");
-        System.out.printf("+%s+%s+\n", "-".repeat(20), "-".repeat(88));
-        System.out.printf("| %-18s | %-86s |\n", "Kode", pelanggan.getKode());
-        System.out.printf("| %-18s | %-86s |\n", "Nama", pelanggan.getNama());
-        System.out.printf("| %-18s | %-86s |\n", "Status", pelanggan.getStatusKeanggotaan());
-        System.out.printf("+%s+%s+\n", "-".repeat(20), "-".repeat(88));
-        System.out.println();
-
-        String command = "";
-
-        while (true) {
-            command = input.nextLine();
-            if (command.equalsIgnoreCase("exit")) {
-                break;
-            } else if (command.equalsIgnoreCase("list_lagu")) {
-                List<Lagu> list = pelanggan.ambilListLagu();
-
-                System.out.printf("+%s+%s+%s+%s+%s+\n", "-".repeat(32), "-".repeat(17), "-".repeat(27), "-".repeat(22), "-".repeat(7));
-                System.out.printf("| %-30s | %-15s | %-25s | %-20s | %5s |\n", "Judul Lagu", "Genre", "Artist", "Pencipta", "Tahun");
-                System.out.printf("+%s+%s+%s+%s+%s+\n", "-".repeat(32), "-".repeat(17), "-".repeat(27), "-".repeat(22), "-".repeat(7));
-                for (Lagu lagu : list) {
-                    System.out.printf("| %-30s | %-15s | %-25s | %-20s | %5d |\n", 
-                    lagu.getJudul(), lagu.getGenre(), lagu.getArtist(), lagu.getPencipta(), lagu.getTahun());
+        Pelanggan pelanggan;
+        infLoop: while (true) {
+            System.out.print("Status keanggotaan (FREE/PREMIUM): ");
+            switch (input.nextLine().toLowerCase()) {
+                case "free" -> {
+                    pelanggan = new PelangganFree(kode, nama);
+                    break infLoop;
                 }
-                System.out.printf("+%s+%s+%s+%s+%s+\n", "-".repeat(32), "-".repeat(17), "-".repeat(27), "-".repeat(22), "-".repeat(7));
-                System.out.println();
-            } else if (command.equalsIgnoreCase("play")) {
-                String lagu = input.nextLine();
-                pelanggan.dengarkan(lagu);
-            } else {
-                System.out.println("command not recognized");
+                case "premium" -> {
+                    pelanggan = new PelangganPremium(kode, nama);
+                    break infLoop;
+                }
+                default -> System.out.println("Status keanggotaan tidak masuk akal. Coba lagi.");
             }
+        }
+
+        System.out.println(pelanggan);
+
+        infLoop: while (true) {
+            System.out.println(HELP);
+            System.out.print("Masukkan perintah: ");
+            String command = input.nextLine().toLowerCase();
+            switch (command) {
+                case "exit" -> {
+                    break infLoop;
+                }
+                case "help" -> System.out.println(HELP);
+                case "list_lagu" -> {
+                    List<Lagu> list = pelanggan.ambilListLagu();
+                    String rowSeparator = String.format("+%s+%s+%s+%s+%s+", "-".repeat(32), "-".repeat(17), "-".repeat(32), "-".repeat(22), "-".repeat(7));
+                    String columnFormatter = "| %-30s | %-15s | %-30s | %-20s | %5d |\n";
+
+                    System.out.println(rowSeparator);
+                    System.out.printf("| %-30s | %-15s | %-30s | %-20s | %5s |\n", "Judul Lagu", "Genre", "Artist", "Pencipta", "Tahun");
+                    System.out.println(rowSeparator);
+                    for (Lagu lagu : list) {
+                        System.out.printf(columnFormatter,
+                                lagu.getJudul(), lagu.getGenre(), lagu.getArtist(), lagu.getPencipta(), lagu.getTahun());
+                    }
+                    System.out.println(rowSeparator);
+                    System.out.println();
+                }
+                case "play" -> {
+                    System.out.print("Judul lagu: ");
+                    String lagu = input.nextLine();
+                    pelanggan.dengarkan(lagu);
+                }
+                case "ubah_status" -> {
+                    StatusKeanggotaan targetStatus = pelanggan.getStatusKeanggotaan() == StatusKeanggotaan.FREE ? StatusKeanggotaan.PREMIUM : StatusKeanggotaan.FREE;
+                    System.out.println("Mengubah status keanggotaan menjadi "+targetStatus);
+                    pelanggan = pelanggan.ubahStatusKeanggotaan(targetStatus);
+                }
+                default -> System.out.println("Perintah tidak masuk akal. Coba lagi.");
+            }
+            System.out.println();
         }
 
         input.close();
