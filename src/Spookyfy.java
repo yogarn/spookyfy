@@ -22,42 +22,50 @@ public class Spookyfy {
         input.nextLine();
         System.out.print("Nama: ");
         String nama = input.nextLine();
-        
-        Pelanggan pelanggan = new PelangganFree(kode, nama, JenisPelanggan.FREE);
-
-        System.out.println();
-        System.out.printf("+%s+%s+\n", "-".repeat(20), "-".repeat(88));
-        System.out.printf("| %-18s | %-86s |\n", "Informasi Pengguna", "Keterangan");
-        System.out.printf("+%s+%s+\n", "-".repeat(20), "-".repeat(88));
-        System.out.printf("| %-18s | %-86s |\n", "Kode", pelanggan.getKode());
-        System.out.printf("| %-18s | %-86s |\n", "Nama", pelanggan.getNama());
-        System.out.printf("| %-18s | %-86s |\n", "Status", pelanggan.getStatusKeanggotaan());
-        System.out.printf("+%s+%s+\n", "-".repeat(20), "-".repeat(88));
-        System.out.println();
-
-        String command = "";
-
-        while (true) {
-            command = input.nextLine();
-            if (command.equalsIgnoreCase("exit")) {
-                break;
-            } else if (command.equalsIgnoreCase("list_lagu")) {
-                List<Lagu> list = pelanggan.ambilListLagu();
-
-                System.out.printf("+%s+%s+%s+%s+%s+\n", "-".repeat(32), "-".repeat(17), "-".repeat(27), "-".repeat(22), "-".repeat(7));
-                System.out.printf("| %-30s | %-15s | %-25s | %-20s | %5s |\n", "Judul Lagu", "Genre", "Artist", "Pencipta", "Tahun");
-                System.out.printf("+%s+%s+%s+%s+%s+\n", "-".repeat(32), "-".repeat(17), "-".repeat(27), "-".repeat(22), "-".repeat(7));
-                for (Lagu lagu : list) {
-                    System.out.printf("| %-30s | %-15s | %-25s | %-20s | %5d |\n", 
-                    lagu.getJudul(), lagu.getGenre(), lagu.getArtist(), lagu.getPencipta(), lagu.getTahun());
+        Pelanggan pelanggan;
+        infLoop: while (true) {
+            System.out.print("Status keanggotaan (FREE/PREMIUM): ");
+            switch (input.nextLine().toLowerCase()) {
+                case "free" -> {
+                    pelanggan = new PelangganFree(kode, nama);
+                    break infLoop;
                 }
-                System.out.printf("+%s+%s+%s+%s+%s+\n", "-".repeat(32), "-".repeat(17), "-".repeat(27), "-".repeat(22), "-".repeat(7));
-                System.out.println();
-            } else if (command.equalsIgnoreCase("play")) {
-                String lagu = input.nextLine();
-                pelanggan.dengarkan(lagu);
-            } else {
-                System.out.println("command not recognized");
+                case "premium" -> {
+                    pelanggan = new PelangganPremium(kode, nama);
+                    break infLoop;
+                }
+                default -> System.out.println("Status keanggotaan tidak masuk akal. Coba lagi.");
+            }
+        }
+
+        System.out.println(pelanggan);
+
+        infLoop: while (true) {
+            String command = input.nextLine().toLowerCase();
+            switch (command) {
+                case "exit" -> {
+                    break infLoop;
+                }
+                case "list_lagu" -> {
+                    List<Lagu> list = pelanggan.ambilListLagu();
+                    String rowSeparator = String.format("+%s+%s+%s+%s+%s+", "-".repeat(32), "-".repeat(17), "-".repeat(27), "-".repeat(22), "-".repeat(7));
+                    String columnFormatter = "| %-30s | %-15s | %-25s | %-20s | %5d |\n";
+
+                    System.out.println(rowSeparator);
+                    System.out.printf("| %-30s | %-15s | %-25s | %-20s | %5s |\n", "Judul Lagu", "Genre", "Artist", "Pencipta", "Tahun");
+                    System.out.println(rowSeparator);
+                    for (Lagu lagu : list) {
+                        System.out.printf(columnFormatter,
+                                lagu.getJudul(), lagu.getGenre(), lagu.getArtist(), lagu.getPencipta(), lagu.getTahun());
+                    }
+                    System.out.println(rowSeparator);
+                    System.out.println();
+                }
+                case "play" -> {
+                    String lagu = input.nextLine();
+                    pelanggan.dengarkan(lagu);
+                }
+                default -> System.out.println("Perintah tidak masuk akal. Coba lagi.");
             }
         }
 

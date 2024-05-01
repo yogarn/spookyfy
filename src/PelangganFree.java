@@ -4,8 +4,8 @@ import java.util.List;
 
 public class PelangganFree extends Pelanggan {
 
-    public PelangganFree(int kode, String nama, JenisPelanggan statusKeanggotaan) {
-        super(kode, nama, statusKeanggotaan);
+    public PelangganFree(int kode, String nama) {
+        super(kode, nama, StatusKeanggotaan.FREE);
     }
 
     @Override
@@ -17,5 +17,5 @@ public class PelangganFree extends Pelanggan {
             }
         }
         return laguList;
-    }    
+    }
 }

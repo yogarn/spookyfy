@@ -4,10 +4,10 @@ public abstract class Pelanggan implements Mendengarkan {
     private int kode;
     private String nama;
 
-    private JenisPelanggan statusKeanggotaan;
+    private StatusKeanggotaan statusKeanggotaan;
     private Playlist playlist;
 
-    public Pelanggan(int kode, String nama, JenisPelanggan statusKeanggotaan) {
+    public Pelanggan(int kode, String nama, StatusKeanggotaan statusKeanggotaan) {
         this.kode = kode;
         this.nama = nama;
         this.statusKeanggotaan = statusKeanggotaan;
@@ -21,11 +21,11 @@ public abstract class Pelanggan implements Mendengarkan {
         return nama;
     }
 
-    public JenisPelanggan getStatusKeanggotaan() {
+    public StatusKeanggotaan getStatusKeanggotaan() {
         return statusKeanggotaan;
     }
 
-    public void setStatusKeanggotaan(JenisPelanggan statusKeanggotaan) {
+    public void setStatusKeanggotaan(StatusKeanggotaan statusKeanggotaan) {
         this.statusKeanggotaan = statusKeanggotaan;
     }
 
@@ -61,5 +61,31 @@ public abstract class Pelanggan implements Mendengarkan {
             }
         }
         return null;
+    }
+
+    public Pelanggan ubahStatusKeanggotaan(StatusKeanggotaan statusKeanggotaan) {
+        if (this.statusKeanggotaan != statusKeanggotaan) {
+            if (statusKeanggotaan == StatusKeanggotaan.PREMIUM) {
+                return new PelangganPremium(kode, nama);
+            } else {
+                return new PelangganFree(kode, nama);
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        String rowSeparator = String.format("+%s+%s+\n", "-".repeat(20), "-".repeat(77));
+        String columnFormatter = "| %-18s | %-75s |\n";
+        sb.append(rowSeparator);
+        sb.append(String.format(columnFormatter, "Informasi Pengguna", "Keterangan"));
+        sb.append(rowSeparator);
+        sb.append(String.format(columnFormatter, "Kode", kode));
+        sb.append(String.format(columnFormatter, "Nama", nama));
+        sb.append(String.format(columnFormatter, "Status Keanggotaan", statusKeanggotaan));
+        sb.append(rowSeparator);
+        return sb.toString();
     }
 }
