@@ -17,6 +17,5 @@ public class PelangganFree extends Pelanggan {
             }
         }
         return laguList;
-    }
-
+    }    
 }

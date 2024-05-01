@@ -1,3 +1,6 @@
+import java.util.List;
+import java.util.Scanner;
+
 public class Spookyfy {
     public static final Playlist DEFAULT_PLAYLIST = new Playlist(new Lagu[]{
             new Lagu("Bohemian Rhapsody", "Rock", 1975, "Queen", "Freddie Mercury"),
@@ -13,6 +16,51 @@ public class Spookyfy {
     });
 
     public static void main(String[] args) {
-        System.out.println("Hello, World!");
+        Scanner input = new Scanner(System.in);
+        System.out.print("Kode: ");
+        int kode = input.nextInt();
+        input.nextLine();
+        System.out.print("Nama: ");
+        String nama = input.nextLine();
+        
+        Pelanggan pelanggan = new PelangganFree(kode, nama, JenisPelanggan.FREE);
+
+        System.out.println();
+        System.out.printf("+%s+%s+\n", "-".repeat(20), "-".repeat(88));
+        System.out.printf("| %-18s | %-86s |\n", "Informasi Pengguna", "Keterangan");
+        System.out.printf("+%s+%s+\n", "-".repeat(20), "-".repeat(88));
+        System.out.printf("| %-18s | %-86s |\n", "Kode", pelanggan.getKode());
+        System.out.printf("| %-18s | %-86s |\n", "Nama", pelanggan.getNama());
+        System.out.printf("| %-18s | %-86s |\n", "Status", pelanggan.getStatusKeanggotaan());
+        System.out.printf("+%s+%s+\n", "-".repeat(20), "-".repeat(88));
+        System.out.println();
+
+        String command = "";
+
+        while (true) {
+            command = input.nextLine();
+            if (command.equalsIgnoreCase("exit")) {
+                break;
+            } else if (command.equalsIgnoreCase("list_lagu")) {
+                List<Lagu> list = pelanggan.ambilListLagu();
+
+                System.out.printf("+%s+%s+%s+%s+%s+\n", "-".repeat(32), "-".repeat(17), "-".repeat(27), "-".repeat(22), "-".repeat(7));
+                System.out.printf("| %-30s | %-15s | %-25s | %-20s | %5s |\n", "Judul Lagu", "Genre", "Artist", "Pencipta", "Tahun");
+                System.out.printf("+%s+%s+%s+%s+%s+\n", "-".repeat(32), "-".repeat(17), "-".repeat(27), "-".repeat(22), "-".repeat(7));
+                for (Lagu lagu : list) {
+                    System.out.printf("| %-30s | %-15s | %-25s | %-20s | %5d |\n", 
+                    lagu.getJudul(), lagu.getGenre(), lagu.getArtist(), lagu.getPencipta(), lagu.getTahun());
+                }
+                System.out.printf("+%s+%s+%s+%s+%s+\n", "-".repeat(32), "-".repeat(17), "-".repeat(27), "-".repeat(22), "-".repeat(7));
+                System.out.println();
+            } else if (command.equalsIgnoreCase("play")) {
+                String lagu = input.nextLine();
+                pelanggan.dengarkan(lagu);
+            } else {
+                System.out.println("command not recognized");
+            }
+        }
+
+        input.close();
     }
 }
