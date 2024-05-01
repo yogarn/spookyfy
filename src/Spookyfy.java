@@ -64,7 +64,6 @@ public class Spookyfy {
                                 lagu.getJudul(), lagu.getGenre(), lagu.getArtist(), lagu.getPencipta(), lagu.getTahun());
                     }
                     System.out.println(rowSeparator);
-                    System.out.println();
                 }
                 case "play" -> {
                     System.out.print("Judul lagu: ");
