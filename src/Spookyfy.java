@@ -2,7 +2,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Spookyfy {
-    public static final Playlist DEFAULT_PLAYLIST = new Playlist(new Lagu[]{
+    public static final Playlist DEFAULT_PLAYLIST = new Playlist(new Lagu[] {
             new Lagu("Rolling in the Deep", "Pop", 2010, "Adele", "Adele Adkins"),
             new Lagu("Uptown Funk", "Funk", 2014, "Mark Ronson ft. Bruno Mars", "Bruno Mars"),
             new Lagu("Shape of You", "Pop", 2017, "Ed Sheeran", "Ed Sheeran"),
@@ -15,7 +15,7 @@ public class Spookyfy {
             new Lagu("Shivers", "Pop", 2021, "Ed Sheeran", "Ed Sheeran"),
     });
 
-    public static String HELP = "Perintah yang tersedia: list_lagu, play, exit, help, ubah_status";
+    public static String HELP = "Perintah yang tersedia: list_lagu, play, exit, help, ubah_status, add, playlist, remove";
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
@@ -53,15 +53,18 @@ public class Spookyfy {
                 case "help" -> System.out.println(HELP);
                 case "list_lagu" -> {
                     List<Lagu> list = pelanggan.ambilListLagu();
-                    String rowSeparator = String.format("+%s+%s+%s+%s+%s+", "-".repeat(32), "-".repeat(17), "-".repeat(32), "-".repeat(22), "-".repeat(7));
+                    String rowSeparator = String.format("+%s+%s+%s+%s+%s+", "-".repeat(32), "-".repeat(17),
+                            "-".repeat(32), "-".repeat(22), "-".repeat(7));
                     String columnFormatter = "| %-30s | %-15s | %-30s | %-20s | %5d |\n";
 
                     System.out.println(rowSeparator);
-                    System.out.printf("| %-30s | %-15s | %-30s | %-20s | %5s |\n", "Judul Lagu", "Genre", "Artist", "Pencipta", "Tahun");
+                    System.out.printf("| %-30s | %-15s | %-30s | %-20s | %5s |\n", "Judul Lagu", "Genre", "Artist",
+                            "Pencipta", "Tahun");
                     System.out.println(rowSeparator);
                     for (Lagu lagu : list) {
                         System.out.printf(columnFormatter,
-                                lagu.getJudul(), lagu.getGenre(), lagu.getArtist(), lagu.getPencipta(), lagu.getTahun());
+                                lagu.getJudul(), lagu.getGenre(), lagu.getArtist(), lagu.getPencipta(),
+                                lagu.getTahun());
                     }
                     System.out.println(rowSeparator);
                 }
@@ -71,9 +74,58 @@ public class Spookyfy {
                     pelanggan.dengarkan(lagu);
                 }
                 case "ubah_status" -> {
-                    StatusKeanggotaan targetStatus = pelanggan.getStatusKeanggotaan() == StatusKeanggotaan.FREE ? StatusKeanggotaan.PREMIUM : StatusKeanggotaan.FREE;
-                    System.out.println("Mengubah status keanggotaan menjadi "+targetStatus);
+                    StatusKeanggotaan targetStatus = pelanggan.getStatusKeanggotaan() == StatusKeanggotaan.FREE
+                            ? StatusKeanggotaan.PREMIUM
+                            : StatusKeanggotaan.FREE;
+                    System.out.println("Mengubah status keanggotaan menjadi " + targetStatus);
                     pelanggan = pelanggan.ubahStatusKeanggotaan(targetStatus);
+                }
+                case "add" -> {
+                    List<Lagu> list = pelanggan.ambilListLagu();
+                    System.out.print("Judul lagu: ");
+                    String judulLagu = input.nextLine();
+                    Lagu laguAdd = null;
+                    for (Lagu lagu : list) {
+                        if (lagu.getJudul().equalsIgnoreCase(judulLagu)) {
+                            laguAdd = lagu;
+                        }
+                    }
+                    if (laguAdd == null) {
+                        System.out.println(
+                                "Lagu tidak valid, periksa kembali input atau coba upgrade status keanggotaan!");
+                    }
+                    pelanggan.getPlaylist().addLagu(laguAdd);
+                }
+                case "playlist" -> {
+                    List<Lagu> list = pelanggan.getPlaylist().getLaguList();
+                    String rowSeparator = String.format("+%s+%s+%s+%s+%s+", "-".repeat(32), "-".repeat(17),
+                            "-".repeat(32), "-".repeat(22), "-".repeat(7));
+                    String columnFormatter = "| %-30s | %-15s | %-30s | %-20s | %5d |\n";
+
+                    System.out.println(rowSeparator);
+                    System.out.printf("| %-30s | %-15s | %-30s | %-20s | %5s |\n", "Judul Lagu", "Genre", "Artist",
+                            "Pencipta", "Tahun");
+                    System.out.println(rowSeparator);
+                    for (Lagu lagu : list) {
+                        if (lagu == null) {
+                            continue;
+                        }
+                        System.out.printf(columnFormatter,
+                                lagu.getJudul(), lagu.getGenre(), lagu.getArtist(), lagu.getPencipta(),
+                                lagu.getTahun());
+                    }
+                    System.out.println(rowSeparator);
+                }
+                case "remove" -> {
+                    System.out.print("Judul lagu: ");
+                    String judulLagu = input.nextLine();
+                    Playlist playlist = pelanggan.getPlaylist();
+                    List<Lagu> list = playlist.getLaguList();
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i) != null && list.get(i).getJudul().equalsIgnoreCase(judulLagu)) {
+                            list.remove(i);
+                        }
+                    }
                 }
                 default -> System.out.println("Perintah tidak masuk akal. Coba lagi.");
             }
